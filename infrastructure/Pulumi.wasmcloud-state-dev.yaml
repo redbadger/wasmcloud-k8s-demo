@@ -1,0 +1,4 @@
+encryptionsalt: v1:AblC0ySJ/40=:v1:O40O0/LDwgJ2A20z:gfeTSGs8CPob5Njqm+TLenb8UjjNuw==
+config:
+  gcp:project: wasmcloud-k8s-demo
+  gcp:zone: europe-west2

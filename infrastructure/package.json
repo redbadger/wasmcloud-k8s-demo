@@ -1,0 +1,11 @@
+{
+    "name": "infrastructure",
+    "devDependencies": {
+        "@types/node": "^10.0.0"
+    },
+    "dependencies": {
+        "@pulumi/gcp": "^5.13.0",
+        "@pulumi/kubernetes": "^3.5.1",
+        "@pulumi/pulumi": "^3.8.0"
+    }
+}
