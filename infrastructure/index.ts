@@ -9,6 +9,7 @@ const engineVersion = gcp.container
   .then((v) => v.latestMasterVersion);
 
 const cluster = new gcp.container.Cluster(CLUSTER_NAME, {
+  name: CLUSTER_NAME,
   initialNodeCount: 2,
   minMasterVersion: engineVersion,
   nodeVersion: engineVersion,
