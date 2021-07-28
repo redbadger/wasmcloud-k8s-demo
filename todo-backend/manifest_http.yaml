@@ -1,0 +1,5 @@
+labels:
+  sample: "wasmcloud todo-backend http server capability"
+capabilities:
+  - image_ref: wasmcloud.azurecr.io/httpserver:0.11.1
+    link_name: default
