@@ -1,40 +1,39 @@
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: todo-http
-# spec:
-#   selector:
-#     app: MyApp
-#   ports:
-#     - protocol: TCP
-#       port: 80
-#       targetPort: 8082
-
-#         ports:
-#         - containerPort: 80
-#       # - configMap
-# ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-actor
+  labels:
+    app: actor
 spec:
+  replicas: 2
   selector:
     matchLabels:
-      app: todo-actor
+      app: actor
   template:
     metadata:
       labels:
-        app: todo-actor
+        app: actor
     spec:
-        containers:
+      containers:
         - name: wasmcloud
-          image: wasmcloud/wasmcloud:0.18.2
-# ---
-# apiVersion: v1
-# kind: Deployment
-# metadata:
-#   name: todo-everything-else
-# spec:
-#   selector:
-#     app: MyApp
+          image: eu.gcr.io/wasmcloud-k8s-demo/wasmcloud:latest
+          args: ["--manifest=/etc/manifest/manifest.yaml"]
+          volumeMounts:
+            - name: manifest
+              mountPath: "/etc/manifest"
+              readOnly: true
+      volumes:
+        - name: manifest
+          configMap:
+            name: manifest-actor
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: manifest-actor
+data:
+  manifest.yaml: |
+    labels:
+      sample: "wasmcloud todo-backend actor"
+    actors:
+      - "eu.gcr.io/wasmcloud-k8s-demo/todo-backend:0.2"
