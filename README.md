@@ -43,7 +43,7 @@ Check that you don't have a `GOOGLE_CREDENTIALS` environment variable exported f
 `pulumi up` contains a confirmation step, so you don't need to worry about accidentally stomping over other people's work.
 
 ```bash
-(cd infrastructure/ && npm install && pulumi up --stack wasmcloud-state-dev)
+(cd infrastructure/ && npm install && pulumi up --stack dev)
 ```
 
 #### Set up kubernetes

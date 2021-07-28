@@ -1,0 +1,40 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: todo-http
+# spec:
+#   selector:
+#     app: MyApp
+#   ports:
+#     - protocol: TCP
+#       port: 80
+#       targetPort: 8082
+
+#         ports:
+#         - containerPort: 80
+#       # - configMap
+# ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-actor
+spec:
+  selector:
+    matchLabels:
+      app: todo-actor
+  template:
+    metadata:
+      labels:
+        app: todo-actor
+    spec:
+        containers:
+        - name: wasmcloud
+          image: wasmcloud/wasmcloud:0.18.2
+# ---
+# apiVersion: v1
+# kind: Deployment
+# metadata:
+#   name: todo-everything-else
+# spec:
+#   selector:
+#     app: MyApp
