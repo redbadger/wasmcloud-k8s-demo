@@ -5,7 +5,7 @@ metadata:
   labels:
     app: actor
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: actor
@@ -22,6 +22,13 @@ spec:
             - name: manifest
               mountPath: "/etc/manifest"
               readOnly: true
+          env:
+            - name: CONTROL_HOST
+              value: example-nats-cluster
+            - name: RPC_HOST
+              value: example-nats-cluster
+            - name: KVCACHE_NATS_URL
+              value: example-nats-cluster
       volumes:
         - name: manifest
           configMap:
@@ -37,3 +44,12 @@ data:
       sample: "wasmcloud todo-backend actor"
     actors:
       - "eu.gcr.io/wasmcloud-k8s-demo/todo-backend:0.2"
+---
+# FIXME: pull this out into another file
+apiVersion: nats.io/v1alpha2
+kind: NatsCluster
+metadata:
+  name: example-nats-cluster
+spec:
+  size: 3
+  version: "2.1.8"

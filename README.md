@@ -54,7 +54,7 @@ Log in:
 gcloud container clusters get-credentials wasmcloud --zone europe-west2
 ```
 
-Install nats operator following [their docs](https://docs.nats.io/nats-on-kubernetes/prometheus-and-nats-operator).
+Install nats operator following [their docs](https://github.com/nats-io/nats-operator).
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/nats-io/nats-operator/master/deploy/00-prereqs.yaml
@@ -63,9 +63,14 @@ kubectl apply -f https://raw.githubusercontent.com/nats-io/nats-operator/master/
 
 There is a whole bunch more that could be done, but a simple nats cluster will do for now. We will add an NGS bridge later.
 
+```
+kubectl apply -f todo-backend/kubernentes/todo-backend-service.yml
+```
+
 ## Developing
 
 ### Pushing an actor image
+
 Found some inconsistency when pushing and pulling images to and from GCR when using wash cli, we resorted to using `wasm-to-oci`. The inconsistency lied with the media types supported for the images. Had to change the supported media types within `wasm-to-oci` as shown below.
 
 wash doesn't understand how to talk to gcr.io, and we're not in the mood for debugging it right now. As a work-around, we applied this patch to https://github.com/engineerd/wasm-to-oci :

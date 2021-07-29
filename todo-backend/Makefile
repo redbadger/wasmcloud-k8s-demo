@@ -21,7 +21,6 @@ setup-nats:
 
 .PHONY: run
 run:
-	TODO_ACTOR=$(shell wash claims inspect $(DEBUG)/todo_backend_s.wasm --output json | jq .module -r) \
 	KVCACHE_NATS_URL=0.0.0.0 pnpx -y concurrently "sleep 0; wasmcloud -m manifest.yaml" "sleep 5; wasmcloud -m manifest_actor.yaml" "sleep 10; wasmcloud -m manifest_http.yaml"
 
 .PHONY: build
