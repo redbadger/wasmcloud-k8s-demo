@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-links
+  labels:
+    app: links
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: links
+  template:
+    metadata:
+      labels:
+        app: links
+    spec:
+      containers:
+        - name: wasmcloud
+          image: eu.gcr.io/wasmcloud-k8s-demo/wasmcloud:0.18.2
+          args: ["--manifest=/etc/manifest/manifest.yaml"]
+          volumeMounts:
+            - name: manifest
+              mountPath: "/etc/manifest"
+              readOnly: true
+          env:
+            - name: CONTROL_HOST
+              value: nats-cluster
+            - name: RPC_HOST
+              value: nats-cluster
+            - name: KVCACHE_NATS_URL
+              value: nats-cluster
+      volumes:
+        - name: manifest
+          configMap:
+            name: manifest-links
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: manifest-links
+data:
+  # TODO: refer to manifest .yaml by path rather than copy-paste
+  manifest.yaml: |
+    labels:
+      sample: "wasmcloud todo-backend links"
+    links:
+      - actor: ${TODO_ACTOR:MD3MZVXGR36UBZOH2R5ES4KY57ZVMDSLTFGKDTIY2DM6EODVD5HTIVOI}
+        provider_id: "VAG3QITQQ2ODAOWB5TTQSDJ53XK3SHBEIFNK4AYJ5RKAX2UNSCAPHA5M"
+        contract_id: "wasmcloud:httpserver"
+        link_name: default
+        values:
+          PORT: 8082
+      - actor: ${TODO_ACTOR:MD3MZVXGR36UBZOH2R5ES4KY57ZVMDSLTFGKDTIY2DM6EODVD5HTIVOI}
+        contract_id: "wasmcloud:logging"
+        provider_id: "VCCANMDC7KONJK435W6T7JFEEL7S3ZG6GUZMZ3FHTBZ32OZHJQR5MJWZ"
+        link_name: default
+      - actor: ${TODO_ACTOR:MD3MZVXGR36UBZOH2R5ES4KY57ZVMDSLTFGKDTIY2DM6EODVD5HTIVOI}
+        contract_id: "wasmcloud:keyvalue"
+        provider_id: "VAZVC4RX54J2NVCMCW7BPCAHGGG5XZXDBXFUMDUXGESTMQEJLC3YVZWB"
+        values:
+          URL: redis://0.0.0.0:6379/
