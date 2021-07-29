@@ -31,7 +31,7 @@ spec:
             - name: KVCACHE_NATS_URL
               value: nats-cluster
             - name: RUST_BACKTRACE
-              value: 1
+              value: "1"
       volumes:
         - name: manifest
           configMap:
