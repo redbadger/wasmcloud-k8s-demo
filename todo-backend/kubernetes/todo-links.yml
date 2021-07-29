@@ -59,4 +59,4 @@ data:
         contract_id: "wasmcloud:keyvalue"
         provider_id: "VAZVC4RX54J2NVCMCW7BPCAHGGG5XZXDBXFUMDUXGESTMQEJLC3YVZWB"
         values:
-          URL: redis://0.0.0.0:6379/
+          URL: redis://rfs-redisfailover.default:26379/

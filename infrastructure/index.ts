@@ -13,6 +13,11 @@ const cluster = new gcp.container.Cluster(CLUSTER_NAME, {
   initialNodeCount: 2,
   minMasterVersion: engineVersion,
   nodeVersion: engineVersion,
+  // addonsConfig: {
+  //   configConnectorConfig: {
+  //     enabled: true,
+  //   },
+  // },
   nodeConfig: {
     machineType: "n1-standard-1",
     oauthScopes: [
