@@ -48,12 +48,13 @@ Check that you don't have a `GOOGLE_CREDENTIALS` environment variable exported f
 
 #### Set up kubernetes
 
+#### Authenticate with the cluster
 Log in:
 
 ```bash
 gcloud container clusters get-credentials wasmcloud --zone europe-west2
 ```
-
+#### Setup NATS operator
 Install nats operator following [their docs](https://github.com/nats-io/nats-operator).
 
 ```
@@ -63,8 +64,16 @@ kubectl apply -f https://raw.githubusercontent.com/nats-io/nats-operator/master/
 
 There is a whole bunch more that could be done, but a simple nats cluster will do for now. We will add an NGS bridge later.
 
+#### Broadcasting wasmcloud links
+* Port forward to the cluster, using
 ```
-kubectl apply -f todo-backend/kubernentes/todo-backend-service.yml
+kubectl port-forward nats-cluster-1 4222:4222
+```
+* Run [`./links.sh`](./todo-backend/links.sh)
+
+#### Apply all the k8s manifests
+```
+kubectl apply -f todo-backend/kubernentes/<manifest>.yml
 ```
 
 ## Developing
