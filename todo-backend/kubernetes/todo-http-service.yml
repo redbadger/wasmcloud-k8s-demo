@@ -32,6 +32,8 @@ spec:
               value: nats-cluster
             - name: RUST_BACKTRACE
               value: "1"
+            - name: RUST_LOG
+              value: "debug"
           ports:
             - containerPort: 8082
       volumes:
