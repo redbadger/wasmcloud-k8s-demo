@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - nats-cluster.yml
+  - redis-pod.yml
+  - todo-actor-service.yml
+  - todo-http-service.yml
+  - todo-logging-service.yml
+  - todo-redis-service.yml
+
+namespace: default
