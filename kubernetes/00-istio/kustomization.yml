@@ -5,4 +5,4 @@ resources:
   - namespace.yml
   - profile.yml
 
-namespace: istio
+namespace: istio-system

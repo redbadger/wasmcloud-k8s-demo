@@ -63,5 +63,6 @@ spec:
     app: http-capability
   ports:
     - protocol: TCP
+      name: http
       port: 8082
       targetPort: 8082
