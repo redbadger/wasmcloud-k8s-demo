@@ -48,50 +48,19 @@ Check that you don't have a `GOOGLE_CREDENTIALS` environment variable exported f
 
 #### Set up kubernetes
 
-#### Authenticate with the cluster
+All setup operations live in ./scripts/setup.sh
 
-Log in:
-
-```bash
-gcloud container clusters get-credentials wasmcloud --zone europe-west2
-```
-
-#### Set up istio
-
-<!-- TODO this is a bit sad: we should really use a manifest that pins the version -->
-
-Install istio
-
-```bash
-istioctl operator init
-```
-
-#### Setup NATS operator
-
-Install nats operator following [their docs](https://github.com/nats-io/nats-operator).
+## Testing
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/nats-io/nats-operator/master/deploy/00-prereqs.yaml
-kubectl apply -f https://raw.githubusercontent.com/nats-io/nats-operator/master/deploy/10-deployment.yaml
+kubectl port-forward -n todo-backend service/todo-http-capability-service 8082:8082
 ```
 
-There is a whole bunch more that could be done, but a simple nats cluster will do for now. We will add an NGS bridge later.
-
-#### Broadcasting wasmcloud links
-
-- Port forward to the cluster, using
-
 ```
-kubectl port-forward nats-cluster-1 4222:4222
+curl localhost:8082/api
 ```
 
-- Run [`./links.sh`](./todo-backend/links.sh)
-
-#### Apply all the k8s manifests
-
-```
-kubectl apply -f kubernetes/todo-backend/<manifest>.yml
-```
+should return the empty array `[]`.
 
 ## Developing
 

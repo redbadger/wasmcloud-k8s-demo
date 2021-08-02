@@ -3,6 +3,5 @@ kind: Kustomization
 
 resources:
   - https://raw.githubusercontent.com/nats-io/nats-operator/master/deploy/10-deployment.yaml
-  - nats-cluster.yml
 
-namespace: default
+namespace: nats-cluster

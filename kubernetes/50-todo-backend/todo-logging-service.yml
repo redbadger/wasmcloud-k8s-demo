@@ -25,11 +25,11 @@ spec:
               readOnly: true
           env:
             - name: CONTROL_HOST
-              value: nats-cluster
+              value: nats-cluster.nats-cluster
             - name: RPC_HOST
-              value: nats-cluster
+              value: nats-cluster.nats-cluster
             - name: KVCACHE_NATS_URL
-              value: nats-cluster
+              value: nats-cluster.nats-cluster
             - name: RUST_LOG
               value: debug
             - name: RUST_BACKTRACE
