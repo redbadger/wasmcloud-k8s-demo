@@ -25,10 +25,8 @@ gcloud container clusters get-credentials wasmcloud --zone europe-west2
 
 kubectl apply -k kubernetes/01-nats-prereqs
 kubectl apply -k kubernetes/10-nats-operator
-kubectl wait --for=condition=ready -n nats-cluster pod/nats-cluster-1
-
 kubectl apply -k kubernetes/20-nats-cluster
-wait_for_kubernetes
+kubectl wait --for=condition=ready -n nats-cluster pod/nats-cluster-1
 
 # Deploy application specific resources
 kubectl apply -k kubernetes/50-todo-backend
