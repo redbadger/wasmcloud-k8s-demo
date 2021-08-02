@@ -41,4 +41,4 @@ sleep 15
 
 # Port forward to the nats cluster
 # TODO: work out how to make `concurrently` set a successful exit code.
-pnpx -y concurrently --kill-others "kubectl port-forward -n nats-cluster nats-cluster-1 4222:4222" "todo-backend/links.sh" || exit 0
+pnpx -y concurrently --kill-others "kubectl port-forward -n nats-cluster nats-cluster-1 4222:4222" "todo-backend/links.sh" || true
