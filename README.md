@@ -80,7 +80,7 @@ kubectl port-forward nats-cluster-1 4222:4222
 #### Apply all the k8s manifests
 
 ```
-kubectl apply -f todo-backend/kubernentes/<manifest>.yml
+kubectl apply -f kubernetes/todo-backend/<manifest>.yml
 ```
 
 ## Developing
