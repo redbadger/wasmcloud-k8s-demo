@@ -56,6 +56,16 @@ Log in:
 gcloud container clusters get-credentials wasmcloud --zone europe-west2
 ```
 
+#### Set up istio
+
+<!-- TODO this is a bit sad: we should really use a manifest that pins the version -->
+
+Install istio
+
+```bash
+istioctl operator init
+```
+
 #### Setup NATS operator
 
 Install nats operator following [their docs](https://github.com/nats-io/nats-operator).
