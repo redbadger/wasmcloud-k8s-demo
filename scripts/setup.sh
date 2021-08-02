@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 cd "$(dirname "$0")"/..
 
 # TODO: split this out into a Makefile?
@@ -23,12 +23,9 @@ gcloud container clusters get-credentials wasmcloud --zone europe-west2
 # kubectl apply -k kubernetes/00-istio/
 # wait_for_kubernetes
 
-kubectl apply -k kubernetes/nats-00
-# TODO: ^ kubectl wait for something here that isn't a deployment?
-
-# Setup NATS Cluster
+kubectl apply -k kubernetes/01-nats-prereqs
 kubectl apply -k kubernetes/10-nats-operator
-wait_for_kubernetes
+kubectl wait --for=condition=ready -n nats-cluster pod/nats-cluster-1
 
 kubectl apply -k kubernetes/20-nats-cluster
 wait_for_kubernetes
