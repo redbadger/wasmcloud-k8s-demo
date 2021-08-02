@@ -1,5 +1,7 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 cd "$(dirname "$0")"/..
 
-ls -d1 kubernetes/* | sort --reverse | xargs -n1 kubectl delete -k
+ls -d1 kubernetes/* | sort --reverse | while read dir; do
+    kubectl delete -k $dir || echo "$dir failed to delete. Maybe you deleted it already?"
+done

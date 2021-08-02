@@ -5,7 +5,7 @@ cd "$(dirname "$0")"/..
 # TODO: split this out into a Makefile?
 
 function wait_for_kubernetes() {
-    kubectl wait --for=condition=available --timeout=60s --all deployments
+    kubectl wait --all-namespaces --for=condition=available --timeout=60s --all deployments
 }
 
 gcloud container clusters get-credentials wasmcloud --zone europe-west2
@@ -26,10 +26,12 @@ gcloud container clusters get-credentials wasmcloud --zone europe-west2
 kubectl apply -k kubernetes/01-nats-prereqs
 kubectl apply -k kubernetes/10-nats-operator
 kubectl apply -k kubernetes/20-nats-cluster
-kubectl wait --for=condition=ready -n nats-cluster pod/nats-cluster-1
+kubectl wait --for=condition=ready -n nats-cluster pod/nats-cluster-1 --timeout=60s
+wait_for_kubernetes
 
 # Deploy application specific resources
 kubectl apply -k kubernetes/50-todo-backend
+wait_for_kubernetes
 
 # Waiting for actors and capabilities to be running, removing this sleep can cause panic
 sleep 15
