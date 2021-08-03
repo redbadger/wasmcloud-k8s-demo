@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-http-capability
+  namespace: todo-backend
   labels:
     app: http-capability
 spec:
@@ -36,6 +37,18 @@ spec:
               value: "debug"
           ports:
             - containerPort: 8082
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 8082
+            initialDelaySeconds: 30
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /api
+              port: 8082
+            initialDelaySeconds: 30
+            periodSeconds: 3
       volumes:
         - name: manifest
           configMap:
