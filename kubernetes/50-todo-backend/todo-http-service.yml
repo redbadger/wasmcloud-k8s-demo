@@ -37,18 +37,18 @@ spec:
               value: "debug"
           ports:
             - containerPort: 8082
-          readinessProbe:
-            httpGet:
-              path: /api
-              port: 8082
-            initialDelaySeconds: 30
-            periodSeconds: 3
           livenessProbe:
-            httpGet:
-              path: /api
-              port: 8082
-            initialDelaySeconds: 30
-            periodSeconds: 3
+            exec:
+              command:
+              - bash
+              - -c
+              - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a liveness test'"
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a readiness test'"
       volumes:
         - name: manifest
           configMap:
@@ -63,6 +63,7 @@ data:
   manifest.yaml: |
     labels:
       sample: "wasmcloud todo-backend http server capability"
+      capability:httpserver
     capabilities:
       - image_ref: wasmcloud.azurecr.io/httpserver:0.11.1
         link_name: default
