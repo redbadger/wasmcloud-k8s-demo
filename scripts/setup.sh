@@ -19,7 +19,11 @@ gcloud container clusters get-credentials wasmcloud --zone europe-west2
 
 kubectl apply -k kubernetes/01-nats-prereqs
 kubectl apply -k kubernetes/10-nats-operator
-kubectl apply -k kubernetes/20-nats-cluster
+until kubectl apply -k kubernetes/20-nats-cluster; do
+    # Workaround for: `unable to recognize "kubernetes/20-nats-cluster": no matches for kind "NatsCluster" in version "nats.io/v1alpha2"``
+    # TODO: find a way to wait for the nats operator to install the NatsCluster crd
+    sleep 10
+done
 wait_for_pods -n nats-cluster -l app=nats
 wait_for_deployments
 
