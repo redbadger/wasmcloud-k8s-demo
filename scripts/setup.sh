@@ -17,20 +17,6 @@ function wait_for_pods() {
 
 gcloud container clusters get-credentials wasmcloud --zone europe-west2
 
-# It's sad that this will not get a pinned version of istio, but it's the easiest way to get going
-command -v istioctl || curl -sL https://istio.io/downloadIstioctl | sh -
-export PATH=$PATH:$HOME/.istioctl/bin
-
-istioctl operator init --watchedNamespaces=nats-cluster,todo-backend
-
-wait_for_pods -n istio-operator -l name=istio-operator
-
-kubectl apply -k kubernetes/00-istio/
-wait_for_deployments
-
-# Verifying istio install
-istioctl verify-install
-
 kubectl apply -k kubernetes/01-nats-prereqs
 kubectl apply -k kubernetes/10-nats-operator
 kubectl apply -k kubernetes/20-nats-cluster
