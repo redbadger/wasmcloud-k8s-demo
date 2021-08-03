@@ -10,12 +10,19 @@ function wait_for_deployments() {
 
 function wait_for_pods() {
     until kubectl wait --for=condition=ready --timeout=480s pod "$@"; do
-        echo "Waiting for $@"
+        echo "Waiting for $*"
         sleep 10
     done
 }
 
-gcloud container clusters get-credentials wasmcloud --zone europe-west2
+if [ "$1" == "eks" ]; then
+    aws eks --region eu-west-2 update-kubeconfig --name wasmcloud
+elif [ "$1" == "gke" ]; then
+    gcloud container clusters get-credentials wasmcloud --zone europe-west2
+else 
+    echo "Usage: setup.sh gke | eks"
+    exit 1
+fi
 
 kubectl apply -k kubernetes/01-nats-prereqs
 kubectl apply -k kubernetes/10-nats-operator
