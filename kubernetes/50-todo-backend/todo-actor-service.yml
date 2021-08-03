@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: wasmcloud
-          image: eu.gcr.io/wasmcloud-k8s-demo/wasmcloud:0.18.2
+          image: eu.gcr.io/wasmcloud-k8s-demo/wasmcloud:0.18.2-debug
           imagePullPolicy: Always
           args: ["--manifest=/etc/manifest/manifest.yaml"]
           volumeMounts:
