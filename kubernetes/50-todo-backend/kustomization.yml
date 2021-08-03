@@ -8,5 +8,6 @@ resources:
   - todo-http-service.yml
   - todo-logging-service.yml
   - todo-redis-service.yml
+  - ingress.yml
 
 namespace: todo-backend

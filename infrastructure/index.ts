@@ -5,6 +5,7 @@ import * as gcp from "@pulumi/gcp";
 const CLUSTER_NAME = "wasmcloud";
 
 export const ipAddress = new gcp.compute.Address("wasmcloud-k8s-demo", {
+  name: "wasmcloud-k8s-demo",
   region: "europe-west2",
 });
 // TODO: pull in the rest of https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs if possible
