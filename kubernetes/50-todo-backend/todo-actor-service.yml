@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-actor
+  namespace: todo-backend
   labels:
     app: actor
 spec:
@@ -25,11 +26,11 @@ spec:
               readOnly: true
           env:
             - name: CONTROL_HOST
-              value: nats-cluster.nats-cluster
+              value: nats.nats
             - name: RPC_HOST
-              value: nats-cluster.nats-cluster
+              value: nats.nats
             - name: KVCACHE_NATS_URL
-              value: nats-cluster.nats-cluster
+              value: nats.nats
             - name: RUST_BACKTRACE
               value: "1"
             - name: RUST_LOG
@@ -43,6 +44,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: manifest-actor
+  namespace: todo-backend
 data:
   # TODO: refer to manifest .yaml by path rather than copy-paste
   manifest.yaml: |

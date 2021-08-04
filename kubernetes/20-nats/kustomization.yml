@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   - namespace.yml
-  - prereqs.yml
+  - helm-template.yml
 
-namespace: nats-cluster
+namespace: nats

@@ -1,0 +1,10 @@
+leafnodes:
+  enabled: true
+  remotes:
+    - url: tls://connect.ngs.global:7422
+      credentials:
+        secret:
+          name: user-credentials
+          key: user.ncreds
+natsbox:
+  enabled: false
