@@ -40,15 +40,15 @@ spec:
           livenessProbe:
             exec:
               command:
-              - bash
-              - -c
-              - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a liveness test'"
+                - bash
+                - -c
+                - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a liveness test'"
           readinessProbe:
             exec:
               command:
-              - bash
-              - -c
-              - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a readiness test'"
+                - bash
+                - -c
+                - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a readiness test'"
       volumes:
         - name: manifest
           configMap:
@@ -71,6 +71,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: todo-http-capability-service
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   selector:
     app: http-capability

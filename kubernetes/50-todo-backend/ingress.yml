@@ -1,9 +1,13 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
   namespace: todo-backend
+  annotations:
+    kubernetes.io/ingress.class: nginx
 spec:
-  backend:
-    serviceName: todo-http-capability-service
-    servicePort: 8082
+  defaultBackend:
+    service:
+      name: todo-http-capability-service
+      port:
+        number: 8082
