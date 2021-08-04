@@ -63,7 +63,6 @@ data:
   manifest.yaml: |
     labels:
       sample: "wasmcloud todo-backend http server capability"
-      capability:httpserver
     capabilities:
       - image_ref: wasmcloud.azurecr.io/httpserver:0.11.1
         link_name: default
