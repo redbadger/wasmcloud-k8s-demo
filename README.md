@@ -20,15 +20,17 @@ We are using pulumi for our infrastructure-as-code setup. If you get lost, it mi
 
 To set things up:
 
-- Ask for the .env from someone on the red-badger slack. Specifically, you will want to export PULUMI_CONFIG_PASSPHRASE into your environment (this is used to decrypt the pulumi state, which is shared in an aws s3 bucket).
+- Ask for the .env from someone on the red-badger slack. Specifically, you will want to export PULUMI_CONFIG_PASSPHRASE into your environment (this is used to decrypt the pulumi state, which is shared in a google storage bucket).
 
 #### Log into aws if you aren't already
 
-https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/obtain-credentials.html
+Follow the steps from https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/obtain-credentials.html to get your credentials as a csv, and then run:
 
 ```bash
 aws configure
 ```
+
+and paste in the appropriate values.
 
 ```bash
 gcloud auth login
@@ -40,15 +42,31 @@ Check that you don't have a `GOOGLE_CREDENTIALS` environment variable exported f
 
 #### Run pulumi
 
+`pulumi login --cloud-url gs://pulumi-state-bucket`
+
 `pulumi up` contains a confirmation step, so you don't need to worry about accidentally stomping over other people's work.
 
 ```bash
 (cd infrastructure/ && npm install && pulumi up --stack dev)
 ```
 
+The user who does this step becomes god on the eks cluster automatically. As a work-around,
+
+```
+kubectl edit configmap aws-auth -n kube-system
+```
+
+```
+mapUsers: |
+    - userarn: arn:aws:iam::394465323128:user/david.laban
+    username: david.laban
+    groups:
+        - system:masters
+```
+
 #### Set up kubernetes
 
-All setup operations live in ./scripts/setup.sh
+All setup operations live in ./scripts/setup.sh. This takes an argument `eks` or `gke`, and sets up the appropriate cluster + link definitions.
 
 ## Testing
 
@@ -60,7 +78,7 @@ kubectl port-forward -n todo-backend service/todo-http-capability-service 8082:8
 curl localhost:8082/api
 ```
 
-should return the empty array `[]`.
+This should return the empty array `[]`, or whatever todo items people have added.
 
 ## Developing
 
