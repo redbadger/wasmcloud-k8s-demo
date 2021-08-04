@@ -2,6 +2,29 @@ apiVersion: nats.io/v1alpha2
 kind: NatsCluster
 metadata:
   name: nats-cluster
+  namespace: nats-cluster
 spec:
-  size: 3
-  version: "2.1.8"
+  size: 1
+  version: "2.3.0"
+
+  natsConfig:
+    debug: true
+    trace: true
+
+  leafnodeConfig:
+    remotes:
+    - url: tls://connect.ngs.global
+      credentials: /etc/nats-creds/user.ncreds
+
+  pod:
+    volumeMounts:
+    - name: user-credentials
+      mountPath: /etc/nats-creds
+      readOnly: true
+
+  template:
+    spec:
+      volumes:
+      - name: user-credentials
+        secret:
+          secretName: user-credentials
