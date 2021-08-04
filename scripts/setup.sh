@@ -17,8 +17,12 @@ function wait_for_pods() {
 
 if [ "$1" == "eks" ]; then
     aws eks --region eu-west-2 update-kubeconfig --name wasmcloud
+    # apply nginx controller
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/aws/deploy.yaml
 elif [ "$1" == "gke" ]; then
     gcloud container clusters get-credentials wasmcloud --zone europe-west2
+    # apply nginx controller
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/cloud/deploy.yaml
 else 
     echo "Usage: setup.sh gke | eks"
     exit 1
