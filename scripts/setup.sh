@@ -58,9 +58,9 @@ pnpx -y concurrently --kill-others "kubectl port-forward -n nats service/nats 42
 
 while true; do
     if [ "$CLUSTER" == "eks" ]; then
-        hostname=$(kubectl -n todo-backend get ingress ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        hostname=$(kubectl -n todo get ingress ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
     else
-        hostname=$(kubectl -n todo-backend get ingress ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        hostname=$(kubectl -n todo get ingress ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
     fi
 
     curl --fail "$hostname/api" | jq && break
