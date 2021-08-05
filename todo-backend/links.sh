@@ -18,4 +18,4 @@ PROVIDER_KEY_VALUE=VAZVC4RX54J2NVCMCW7BPCAHGGG5XZXDBXFUMDUXGESTMQEJLC3YVZWB
 
 wash ctl link $ACTOR_KEY $PROVIDER_HTTP wasmcloud:httpserver PORT=8082
 wash ctl link $ACTOR_KEY $PROVIDER_LOGGING wasmcloud:logging
-wash ctl link $ACTOR_KEY $PROVIDER_KEY_VALUE wasmcloud:keyvalue URL=redis://redis-service.todo-backend:6379/
+wash ctl link $ACTOR_KEY $PROVIDER_KEY_VALUE wasmcloud:keyvalue URL=redis://redis-service.todo:6379/
