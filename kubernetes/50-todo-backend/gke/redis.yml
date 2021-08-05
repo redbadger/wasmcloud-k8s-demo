@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-redis-capability
-  namespace: todo-backend
+  name: redis-capability
+  namespace: todo
   labels:
     app: redis-capability
 spec:
@@ -44,13 +44,13 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: manifest-redis-capability
-  namespace: todo-backend
+  namespace: todo
 data:
   # TODO: refer to manifest .yaml by path rather than copy-paste
   # TODO: actually deploy a redis
   manifest.yaml: |
     labels:
-      sample: "wasmcloud todo-backend redis"
+      sample: "wasmcloud todo redis"
     capabilities:
       - image_ref: wasmcloud.azurecr.io/redis:0.11.2
         link_name: default

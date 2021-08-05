@@ -3,9 +3,9 @@ kind: Kustomization
 
 resources:
   - namespace.yml
-  - todo-actor-service.yml
-  - todo-http-service.yml
-  - todo-logging-service.yml
+  - actor.yml
+  - http.yml
+  - logging.yml
   - ingress.yml
 
-namespace: todo-backend
+namespace: todo

@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-http-capability
-  namespace: todo-backend
+  name: http-capability
+  namespace: todo
   labels:
     app: http-capability
 spec:
@@ -62,7 +62,7 @@ data:
   # TODO: refer to manifest .yaml by path rather than copy-paste
   manifest.yaml: |
     labels:
-      sample: "wasmcloud todo-backend http server capability"
+      sample: "wasmcloud todo http server capability"
     capabilities:
       - image_ref: wasmcloud.azurecr.io/httpserver:0.11.1
         link_name: default
@@ -70,7 +70,7 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: todo-http-capability-service
+  name: http-capability-service
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 spec:

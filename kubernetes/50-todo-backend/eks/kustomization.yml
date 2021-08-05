@@ -4,4 +4,4 @@ kind: Kustomization
 bases:
   - ../base
 
-namespace: todo-backend
+namespace: todo

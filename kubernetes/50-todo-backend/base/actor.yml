@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-actor
-  namespace: todo-backend
+  name: actor
+  namespace: todo
   labels:
     app: actor
 spec:
@@ -44,11 +44,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: manifest-actor
-  namespace: todo-backend
+  namespace: todo
 data:
   # TODO: refer to manifest .yaml by path rather than copy-paste
   manifest.yaml: |
     labels:
-      sample: "wasmcloud todo-backend actor"
+      sample: "wasmcloud todo actor"
     actors:
       - "eu.gcr.io/wasmcloud-k8s-demo/todo-backend:0.2"

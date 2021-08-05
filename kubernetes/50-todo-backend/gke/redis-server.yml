@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis-leader
-  namespace: todo-backend
+  namespace: todo
   labels:
     app: redis
     role: leader
@@ -33,7 +33,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-service
-  namespace: todo-backend
+  namespace: todo
 spec:
   selector:
     app: redis

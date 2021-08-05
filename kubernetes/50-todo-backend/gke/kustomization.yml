@@ -5,7 +5,7 @@ bases:
   - ../base
 
 resources:
-  - redis-pod.yml
-  - todo-redis-service.yml
+  - redis-server.yml
+  - redis.yml
 
-namespace: todo-backend
+namespace: todo
