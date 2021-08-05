@@ -35,7 +35,10 @@ helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 helm repo update
 
 # Get this from David (TODO: switch to some other way of providing this)
-kubectl apply -f super-secret-secret.yml
+if [ ! -f kubernetes/20-nats/nats-secret.yml ]; then
+    echo "please get kubernetes/20-nats/nats-secret.yml from David"
+    exit 1
+fi
 # helm is not idempotent, so let's create a manifest and apply it instead
 helm template nats nats/nats -f nats.yaml --namespace=nats >kubernetes/20-nats/helm-template.yml
 kubectl apply -k kubernetes/20-nats

@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - namespace.yml
+  - nats-secret.yml
   - helm-template.yml
 
 namespace: nats
