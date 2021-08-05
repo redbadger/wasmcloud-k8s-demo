@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-logging-capability
+  namespace: todo-backend
   labels:
     app: logging-capability
 spec:
@@ -43,6 +44,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: manifest-logging-capability
+  namespace: todo-backend
 data:
   # TODO: refer to manifest .yaml by path rather than copy-paste
   manifest.yaml: |
