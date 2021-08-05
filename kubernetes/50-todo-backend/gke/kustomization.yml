@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../base
+
+resources:
+  - redis-pod.yml
+  - todo-redis-service.yml
+
+namespace: todo-backend

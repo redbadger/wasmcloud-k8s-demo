@@ -3,11 +3,9 @@ kind: Kustomization
 
 resources:
   - namespace.yml
-  - redis-pod.yml
   - todo-actor-service.yml
   - todo-http-service.yml
   - todo-logging-service.yml
-  - todo-redis-service.yml
   - ingress.yml
 
 namespace: todo-backend
