@@ -5,9 +5,17 @@ import * as gcp from "@pulumi/gcp";
 export class GkeCluster extends pulumi.ComponentResource {
   public clusterName: pulumi.Output<string>;
   public provider: k8s.Provider;
+  public staticIp: pulumi.Output<string>;
 
   constructor(name: string, opts: pulumi.ComponentResourceOptions = {}) {
     super("wasmcloud:GkeCluster", name, {}, opts);
+
+    const ipAddress = new gcp.compute.GlobalAddress("wasmcloud-ip", {
+      name: "wasmcloud-ip",
+    });
+
+    this.staticIp = ipAddress.address;
+
     const engineVersion = gcp.container
       .getEngineVersions()
       .then((v) => v.latestMasterVersion);
