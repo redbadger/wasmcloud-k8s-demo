@@ -10,6 +10,10 @@ export class GkeCluster extends pulumi.ComponentResource {
   constructor(name: string, opts: pulumi.ComponentResourceOptions = {}) {
     super("wasmcloud:GkeCluster", name, {}, opts);
 
+    // TODO: this needs to have a region, but also needs to be publicly routable
+    // The gcloud invocation for this is `gcloud compute addresses create wasmcloud-ip-2 --region europe-west2`
+    // (both of them exist in https://console.cloud.google.com/networking/addresses/list?project=wasmcloud-k8s-demo)
+    // but what is the way to specify this in pulumi?
     const ipAddress = new gcp.compute.GlobalAddress("wasmcloud-ip", {
       name: "wasmcloud-ip",
     });
