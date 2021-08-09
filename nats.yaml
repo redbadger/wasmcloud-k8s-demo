@@ -6,5 +6,13 @@ leafnodes:
         secret:
           name: user-credentials
           key: user.ncreds
+nats:
+  tls:
+    secret:
+      name: nats-server-tls
+    ca: "ca.crt"
+    cert: "tls.crt"
+    key: "tls.key"
+
 natsbox:
   enabled: false

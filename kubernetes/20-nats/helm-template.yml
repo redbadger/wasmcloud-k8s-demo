@@ -23,6 +23,16 @@ data:
     ###############
     http: 8222
     server_name: $POD_NAME
+    #####################
+    #                   #
+    # TLS Configuration #
+    #                   #
+    #####################
+    tls {
+        cert_file: /etc/nats-certs/clients/nats-server-tls/tls.crt
+        key_file:  /etc/nats-certs/clients/nats-server-tls/tls.key
+        ca_file: /etc/nats-certs/clients/nats-server-tls/ca.crt
+    }
     #################
     #               #
     # NATS Leafnode #
@@ -116,6 +126,10 @@ spec:
       #  TLS Volumes  #
       #               #
       #################
+      
+      - name: nats-server-tls-clients-volume
+        secret:
+          secretName: nats-server-tls
       #
       # Leafnode credential volumes
       #
@@ -178,6 +192,14 @@ spec:
             mountPath: /etc/nats-config
           - name: pid
             mountPath: /var/run/nats
+          #######################
+          #                     #
+          #  TLS Volumes Mounts #
+          #                     #
+          #######################
+          
+          - name: nats-server-tls-clients-volume
+            mountPath: /etc/nats-certs/clients/nats-server-tls
           #
           # Leafnode credential volumes
           #
