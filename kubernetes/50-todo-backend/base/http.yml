@@ -68,3 +68,19 @@ data:
     capabilities:
       - image_ref: wasmcloud.azurecr.io/httpserver:0.11.1
         link_name: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-capability-service
+  namespace: todo
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  selector:
+    app: http-capability
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8082
+      targetPort: 8082

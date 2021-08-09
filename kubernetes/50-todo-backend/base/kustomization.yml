@@ -6,5 +6,6 @@ resources:
   - actor.yml
   - http.yml
   - logging.yml
+  - ingress.yml
 
 namespace: todo

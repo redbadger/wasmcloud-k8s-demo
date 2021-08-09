@@ -5,6 +5,3 @@ bases:
   - ../base
 
 namespace: todo
-
-resources:
-  - ingress.yml

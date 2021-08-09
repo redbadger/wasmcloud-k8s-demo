@@ -5,7 +5,6 @@ bases:
   - ../base
 
 resources:
-  - ingress.yml
   - redis-server.yml
   - redis.yml
 
