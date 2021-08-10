@@ -28,7 +28,10 @@ data:
     leafnodes {
       listen: "0.0.0.0:7422"
 
-      
+      tls: {
+        ca_file: "/etc/nats-ca-cert/ca.crt",
+        timeout: 3
+      }
 
       remotes: [
         {

@@ -25,35 +25,31 @@ spec:
             - name: manifest
               mountPath: "/etc/manifest"
               readOnly: true
-            - name: nats-ca-cert
-              mountPath: /etc/nats-ca-cert
-              readOnly: true
           env:
             - name: CONTROL_HOST
-              value: nats.nats
+              value: localhost
             - name: RPC_HOST
-              value: nats.nats
+              value: localhost
             - name: KVCACHE_NATS_URL
-              value: nats.nats
+              value: localhost
             - name: RUST_BACKTRACE
               value: "1"
             - name: RUST_LOG
               value: "debug"
           ports:
             - containerPort: 8082
-
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #       - bash
-          #       - -c
-          #       - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a liveness test'"
-          # readinessProbe:
-          #   exec:
-          #     command:
-          #       - bash
-          #       - -c
-          #       - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a readiness test'"
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a liveness test'"
+          readinessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - "NATS_URL=$KVCACHE_NATS_URL nats pub devnull 'just a readiness test'"
         - name: nats-sidecar
           image: nats:2.3.2-alpine
           imagePullPolicy: IfNotPresent
@@ -62,8 +58,6 @@ spec:
             - "nats-server"
             - "--addr=127.0.0.1"
             - "--config=/etc/nats-config/nats.conf"
-            - "--tlscacert=/etc/nats-ca-cert/ca.crt"
-
           env:
             - name: POD_NAME
               valueFrom:
@@ -71,7 +65,7 @@ spec:
                   fieldPath: metadata.name
 
           volumeMounts:
-            - name: config-volume
+            - name: nats-config-volume
               mountPath: /etc/nats-config
             - name: nats-ca-cert
               mountPath: /etc/nats-ca-cert
@@ -82,7 +76,7 @@ spec:
           configMap:
             name: manifest-http-capability
 
-        - name: config-volume
+        - name: nats-config-volume
           configMap:
             name: nats-config
 
