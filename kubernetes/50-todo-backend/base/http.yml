@@ -55,23 +55,11 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             {}
-          ports:
-          - containerPort: 4222
-            name: client
-          - containerPort: 7422
-            name: leafnodes
-          - containerPort: 7522
-            name: gateways
-          - containerPort: 6222
-            name: cluster
-          - containerPort: 8222
-            name: monitor
-          - containerPort: 7777
-            name: metrics
           command:
           - "nats-server"
           - "--addr=127.0.0.1"
           - "--config=/etc/nats-config/nats.conf"
+          - "--tlscacert=/etc/nats-ca"
 
           env:
           - name: POD_NAME
@@ -82,6 +70,9 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /etc/nats-config
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
             # - name: pid
             #   mountPath: /var/run/nats
             #
@@ -100,6 +91,9 @@ spec:
           configMap:
             name: nats-config
 
+        - name: nats-ca
+          secret:
+            secretName: nats-ca
 ---
 apiVersion: v1
 kind: ConfigMap
