@@ -26,19 +26,49 @@ spec:
               readOnly: true
           env:
             - name: CONTROL_HOST
-              value: nats.nats
+              value: localhost
             - name: RPC_HOST
-              value: nats.nats
+              value: localhost
             - name: KVCACHE_NATS_URL
-              value: nats.nats
+              value: localhost
             - name: RUST_BACKTRACE
               value: "1"
             - name: RUST_LOG
               value: "debug"
+
+        - name: nats-sidecar
+          image: nats:2.3.2-alpine
+          imagePullPolicy: IfNotPresent
+          resources: {}
+          command:
+            - "nats-server"
+            - "--addr=127.0.0.1"
+            - "--config=/etc/nats-config/nats.conf"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+
+          volumeMounts:
+            - name: nats-config-volume
+              mountPath: /etc/nats-config
+            - name: nats-ca-cert
+              mountPath: /etc/nats-ca-cert
+              readOnly: true
+
       volumes:
         - name: manifest
           configMap:
             name: manifest-redis-capability
+
+        - name: nats-config-volume
+          configMap:
+            name: nats-config
+
+        - name: nats-ca-cert
+          configMap:
+            name: nats-ca-cert
 ---
 apiVersion: v1
 kind: ConfigMap
