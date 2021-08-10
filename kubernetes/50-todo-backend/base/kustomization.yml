@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
   - namespace.yml
+  - nats-ca-cert.yml
+  - nats-sidecar-config.yml
   - actor.yml
   - http.yml
   - logging.yml
