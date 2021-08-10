@@ -70,8 +70,8 @@ spec:
             name: metrics
           command:
           - "nats-server"
-          - "--config"
-          - "/etc/nats-config/nats.conf"
+          - "--addr=127.0.0.1"
+          - "--config=/etc/nats-config/nats.conf"
 
           env:
           - name: POD_NAME
@@ -165,7 +165,7 @@ data:
 
       remotes: [
         {
-          url: nats.nats
+          url: nats://nats.nats
         }
       ]
     }
