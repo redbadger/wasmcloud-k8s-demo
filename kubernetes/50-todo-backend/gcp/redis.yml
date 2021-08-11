@@ -34,7 +34,7 @@ spec:
             - name: RUST_BACKTRACE
               value: "1"
             - name: RUST_LOG
-              value: trace
+              value: "debug"
 
         - name: nats-sidecar
           image: nats:2.3.2-alpine
