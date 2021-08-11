@@ -17,16 +17,16 @@ function wait_for_pods() {
 
 CLUSTER="${1:-x}"
 
-if [ "$CLUSTER" == "eks" ]; then
+if [ "$CLUSTER" == "aws" ]; then
     aws eks --region eu-west-2 update-kubeconfig --name wasmcloud
     # apply nginx controller
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/aws/deploy.yaml
-elif [ "$CLUSTER" == "gke" ]; then
+elif [ "$CLUSTER" == "gcp" ]; then
     gcloud container clusters get-credentials wasmcloud --zone europe-west2
     # apply nginx controller
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/cloud/deploy.yaml
 else
-    echo "Usage: setup.sh gke | eks"
+    echo "Usage: setup.sh gcp | aws"
     exit 1
 fi
 
@@ -35,10 +35,20 @@ helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 helm repo update
 
 # Get this from David (TODO: switch to some other way of providing this)
-if [ ! -f kubernetes/20-nats/nats-secret.yml ]; then
-    echo "please get kubernetes/20-nats/nats-secret.yml from David"
+if [ ! -f kubernetes/20-nats/nats-secrets.yml ]; then
+    echo "please get kubernetes/20-nats/nats-secrets.yml from David"
     exit 1
 fi
+
+# installing cert manager operator
+if ! kubectl get namespace cert-manager; then
+    kubectl create namespace cert-manager
+    kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+fi
+
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.4.3/cert-manager.yaml
+wait_for_deployments
+
 # helm is not idempotent, so let's create a manifest and apply it instead
 helm template nats nats/nats -f nats.yaml --namespace=nats >kubernetes/20-nats/helm-template.yml
 kubectl apply -k kubernetes/20-nats
@@ -53,11 +63,11 @@ wait_for_deployments
 sleep 15
 
 # Port forward to the nats cluster
-# TODO: work out how to make `concurrently` set a successful exit code.
-pnpx -y concurrently --kill-others "kubectl port-forward -n nats service/nats 4222:4222" "todo-backend/links.sh" || true
+pod=$(kubectl get pods -n todo --selector="tier=web" -o name)
+pnpx -y concurrently --kill-others --success=first "kubectl port-forward -n todo $pod 4222:4222" "todo-backend/links.sh"
 
 while true; do
-    if [ "$CLUSTER" == "eks" ]; then
+    if [ "$CLUSTER" == "aws" ]; then
         hostname=$(kubectl -n todo get ingress ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
     else
         hostname=$(kubectl -n todo get ingress ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
