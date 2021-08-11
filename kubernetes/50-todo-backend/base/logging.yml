@@ -32,7 +32,7 @@ spec:
             - name: KVCACHE_NATS_URL
               value: localhost
             - name: RUST_LOG
-              value: debug
+              value: trace
             - name: RUST_BACKTRACE
               value: "1"
 

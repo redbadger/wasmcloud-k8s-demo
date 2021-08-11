@@ -35,7 +35,7 @@ spec:
             - name: RUST_BACKTRACE
               value: "1"
             - name: RUST_LOG
-              value: "debug"
+              value: trace
           ports:
             - containerPort: 8082
           livenessProbe:
