@@ -5,7 +5,7 @@ import * as gcp from "@pulumi/gcp";
 export class GkeCluster extends pulumi.ComponentResource {
   public clusterName: pulumi.Output<string>;
   public provider: k8s.Provider;
-  public staticIp: pulumi.Output<string>;
+  // public staticIp: pulumi.Output<string>;
 
   constructor(name: string, opts: pulumi.ComponentResourceOptions = {}) {
     super("wasmcloud:GkeCluster", name, {}, opts);
@@ -14,11 +14,11 @@ export class GkeCluster extends pulumi.ComponentResource {
     // The gcloud invocation for this is `gcloud compute addresses create wasmcloud-ip-2 --region europe-west2`
     // (both of them exist in https://console.cloud.google.com/networking/addresses/list?project=wasmcloud-k8s-demo)
     // but what is the way to specify this in pulumi?
-    const ipAddress = new gcp.compute.GlobalAddress("wasmcloud-ip", {
-      name: "wasmcloud-ip",
-    });
+    // const ipAddress = new gcp.compute.GlobalAddress("wasmcloud-ip", {
+    //   name: "wasmcloud-ip",
+    // });
 
-    this.staticIp = ipAddress.address;
+    // this.staticIp = ipAddress.address;
 
     const engineVersion = gcp.container
       .getEngineVersions()
@@ -26,14 +26,9 @@ export class GkeCluster extends pulumi.ComponentResource {
 
     const cluster = new gcp.container.Cluster(name, {
       name: name,
-      initialNodeCount: 2,
+      initialNodeCount: 1,
       minMasterVersion: engineVersion,
       nodeVersion: engineVersion,
-      // addonsConfig: {
-      //   configConnectorConfig: {
-      //     enabled: true,
-      //   },
-      // },
       nodeConfig: {
         machineType: "n1-standard-1",
         oauthScopes: [

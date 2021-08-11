@@ -10,6 +10,8 @@ export class EksCluster extends pulumi.ComponentResource {
 
     const cluster = new eks.Cluster(name, {
       name,
+      minSize: 1,
+      maxSize: 2,
     });
     this.clusterName = cluster.eksCluster.name;
 
