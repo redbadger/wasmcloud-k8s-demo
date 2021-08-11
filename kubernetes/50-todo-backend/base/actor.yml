@@ -42,6 +42,7 @@ spec:
           resources: {}
           command:
             - "nats-server"
+            - "-DV"
             - "--addr=127.0.0.1"
             - "--config=/etc/nats-config/nats.conf"
           env:
