@@ -70,8 +70,8 @@ spec:
             name: nats-config
 
         - name: nats-ca-cert
-          configMap:
-            name: nats-ca-cert
+          secret:
+            secretName: bogus-cert
 ---
 apiVersion: v1
 kind: ConfigMap
