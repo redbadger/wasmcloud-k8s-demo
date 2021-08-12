@@ -32,10 +32,6 @@ else
     exit 1
 fi
 
-command -v helm || brew install helm
-helm repo add nats https://nats-io.github.io/k8s/helm/charts/
-helm repo update
-
 # Get this from David (TODO: switch to some other way of providing this)
 if [ ! -f kubernetes/20-nats/nats-secrets.yml ]; then
     echo "please get kubernetes/20-nats/nats-secrets.yml from David"
@@ -51,11 +47,27 @@ fi
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.4.3/cert-manager.yaml
 wait_for_deployments
 
+# update helm and helm charts.
+command -v helm || brew install helm
+helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+helm repo update
+
 # helm is not idempotent, so let's create a manifest and apply it instead
 helm template nats nats/nats -f nats.yaml --namespace=nats >kubernetes/20-nats/helm-template.yml
+# HACK: inject `account` public key id into the leafnodes remote config using sed
+# (until  https://github.com/nats-io/k8s/pull/286 has been released,
+# and we can put it into nats.yaml directly).
+sed -i '' \
+    's!^\( *\)\(url: tls://connect.ngs.global:7422\)$!\1account: AB7AGANA6KWTTBUD3AUIEZ47M3GWP2L5AMEVV6OE4IDIN3VFOD3P6TZ5\n\1\2!' \
+    kubernetes/20-nats/helm-template.yml
+
 kubectl apply -k kubernetes/20-nats
 wait_for_pods -n nats -l app.kubernetes.io/name=nats
 wait_for_deployments
+
+if [ ${STOP:-100} -lt 50 ]; then
+    exit 0
+fi
 
 # Deploy application specific resources
 kubectl apply -k "kubernetes/50-todo-backend/$CLUSTER"
