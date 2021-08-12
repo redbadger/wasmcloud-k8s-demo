@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
   - namespace.yml
+  - operator-jwt.yml
+  - nats-accounts.yml
   - nats-secrets.yml
   - cert-manager.yml
   - helm-template.yml

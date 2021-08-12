@@ -6,13 +6,44 @@ leafnodes:
         secret:
           name: user-credentials
           key: user.ncreds
-nats:
-  tls:
-    secret:
-      name: nats-server-tls
-    ca: "ca.crt"
-    cert: "tls.crt"
-    key: "tls.key"
+      local_account: AB7AGANA6KWTTBUD3AUIEZ47M3GWP2L5AMEVV6OE4IDIN3VFOD3P6TZ5
+# nats:
+#   tls:
+#     secret:
+#       name: nats-server-tls
+#     ca: "ca.crt"
+#     cert: "tls.crt"
+#     key: "tls.key"
+
+auth:
+  enabled: true
+
+  # Reference to the Operator JWT.
+  operatorjwt:
+    configMap:
+      name: operator-jwt
+      key: KO.jwt
+      namespace: nats
+
+  # Public key of the System Account
+  systemAccount:
+
+  resolver:
+    ############################
+    #                          #
+    # Memory resolver settings #
+    #                          #
+    ##############################
+    type: memory
+
+    # 
+    # Use a configmap reference which will be mounted
+    # into the container.
+    # 
+    configMap:
+      name: nats-accounts
+      key: resolver.conf
+      namespace: nats
 
 natsbox:
   enabled: false

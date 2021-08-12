@@ -23,16 +23,6 @@ data:
     ###############
     http: 8222
     server_name: $POD_NAME
-    #####################
-    #                   #
-    # TLS Configuration #
-    #                   #
-    #####################
-    tls {
-        cert_file: /etc/nats-certs/clients/nats-server-tls/tls.crt
-        key_file:  /etc/nats-certs/clients/nats-server-tls/tls.key
-        ca_file: /etc/nats-certs/clients/nats-server-tls/ca.crt
-    }
     #################
     #               #
     # NATS Leafnode #
@@ -50,6 +40,14 @@ data:
       }
       ]
     }
+    
+    ##################
+    #                #
+    # Authorization  #
+    #                #
+    ##################
+    resolver: MEMORY
+    include "accounts/resolver.conf"
 ---
 # Source: nats/templates/service.yaml
 apiVersion: v1
@@ -120,16 +118,15 @@ spec:
       # Local volume shared with the reloader.
       - name: pid
         emptyDir: {}
+      - name: resolver-volume
+        configMap:
+          name: nats-accounts
 
       #################
       #               #
       #  TLS Volumes  #
       #               #
       #################
-      
-      - name: nats-server-tls-clients-volume
-        secret:
-          secretName: nats-server-tls
       #
       # Leafnode credential volumes
       #
@@ -192,14 +189,8 @@ spec:
             mountPath: /etc/nats-config
           - name: pid
             mountPath: /var/run/nats
-          #######################
-          #                     #
-          #  TLS Volumes Mounts #
-          #                     #
-          #######################
-          
-          - name: nats-server-tls-clients-volume
-            mountPath: /etc/nats-certs/clients/nats-server-tls
+          - name: resolver-volume
+            mountPath: /etc/nats-config/accounts
           #
           # Leafnode credential volumes
           #
