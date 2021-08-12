@@ -6,14 +6,14 @@ leafnodes:
         secret:
           name: user-credentials
           key: user.ncreds
-      local_account: AB7AGANA6KWTTBUD3AUIEZ47M3GWP2L5AMEVV6OE4IDIN3VFOD3P6TZ5
-# nats:
-#   tls:
-#     secret:
-#       name: nats-server-tls
-#     ca: "ca.crt"
-#     cert: "tls.crt"
-#     key: "tls.key"
+
+nats:
+  tls:
+    secret:
+      name: nats-server-tls
+    ca: "ca.crt"
+    cert: "tls.crt"
+    key: "tls.key"
 
 auth:
   enabled: true
