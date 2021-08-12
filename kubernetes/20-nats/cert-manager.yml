@@ -1,11 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigning
+  namespace: nats
+spec:
+  selfSigned: {}
+---
 apiVersion: cert-manager.io/v1alpha2
-kind: Issuer
+kind: Certificate
+metadata:
+  name: nats-ca
+spec:
+  secretName: nats-ca
+  duration: 8736h # 1 year
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: selfsigning
+    kind: ClusterIssuer
+  commonName: nats-ca
+  usages:
+    - cert sign
+  organization:
+    - Red Badger
+  isCA: true
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
 metadata:
   name: nats-ca
   namespace: nats
 spec:
   ca:
     secretName: nats-ca
+    namespace: nats
 ---
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
@@ -18,7 +45,7 @@ spec:
   renewBefore: 240h # 10 days
   issuerRef:
     name: nats-ca
-    kind: Issuer
+    kind: ClusterIssuer
   usages:
     - signing
     - key encipherment
@@ -34,3 +61,24 @@ spec:
     - "*.nats"
     - "*.nats.nats"
     - "*.nats.nats.svc"
+---
+# TODO: move this into 50-todo-backend/base
+# This is just so that `nats-ca` will share its ca.crt public certificate
+# into the todo namespace
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: bogus-cert
+  namespace: nats
+spec:
+  secretName: bogus-tls
+  duration: 2160h # 90 days
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: nats-ca
+    kind: ClusterIssuer
+  usages:
+    - signing
+  commonName: bogus@example.com
+  organization:
+    - Bogus
