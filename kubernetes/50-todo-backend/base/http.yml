@@ -59,6 +59,8 @@ spec:
             - name: nats-ca-cert
               mountPath: /etc/nats-ca-cert
               readOnly: true
+            - name: user-credentials-volume
+              mountPath: /etc/nats-creds/user-credentials
 
       volumes:
         - name: manifest
@@ -72,6 +74,10 @@ spec:
         - name: nats-ca-cert
           secret:
             secretName: bogus-cert
+
+        - name: user-credentials-volume
+          secret:
+            secretName: user-credentials
 ---
 apiVersion: v1
 kind: ConfigMap

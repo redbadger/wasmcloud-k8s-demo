@@ -35,7 +35,8 @@ data:
 
       remotes: [
         {
-          url: nats://nats.nats
+          url: tls://nats.nats
+          credentials: "/etc/nats-creds/user-credentials/user.ncreds"
         }
       ]
     }

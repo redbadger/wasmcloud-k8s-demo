@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yml
   - bogus-cert.yml
+  - nats-sidecar-secret.yml
   - nats-sidecar-config.yml
   - actor.yml
   - http.yml
