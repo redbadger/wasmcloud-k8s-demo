@@ -80,6 +80,14 @@ curl localhost:8082/api
 
 This should return the empty array `[]`, or whatever todo items people have added.
 
+## Debugging nats
+
+```bash
+kubectl get secrets -n todo bogus-cert -o json | jq '.data["ca.crt"]' -r | base64 -D > ca.crt
+sudo kubefwd svc -n nats nats
+nats --tlsca=ca.crt --server=nats.nats --creds ~/.nkeys/creds/synadia/leaftest/wasmcloud-project.creds pub asdf adsf
+```
+
 ## Developing
 
 ### Pushing an actor image

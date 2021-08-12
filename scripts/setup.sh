@@ -47,6 +47,8 @@ fi
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.4.3/cert-manager.yaml
 wait_for_deployments
 
+kubectl apply -k kubernetes/10-cert-manager
+
 # update helm and helm charts.
 command -v helm || brew install helm
 helm repo add nats https://nats-io.github.io/k8s/helm/charts/

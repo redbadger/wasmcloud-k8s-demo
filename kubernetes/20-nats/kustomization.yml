@@ -6,7 +6,7 @@ resources:
   - operator-jwt.yml
   - nats-accounts.yml
   - nats-secrets.yml
-  - cert-manager.yml
+  - tls-certificate.yml
   - helm-template.yml
 
 namespace: nats
