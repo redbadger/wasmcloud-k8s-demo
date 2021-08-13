@@ -2,6 +2,7 @@ leafnodes:
   enabled: true
   remotes:
     - url: tls://connect.ngs.global:7422
+      account: AB7AGANA6KWTTBUD3AUIEZ47M3GWP2L5AMEVV6OE4IDIN3VFOD3P6TZ5
       credentials:
         secret:
           name: user-credentials

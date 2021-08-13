@@ -55,13 +55,7 @@ helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 helm repo update
 
 # helm is not idempotent, so let's create a manifest and apply it instead
-helm template nats nats/nats -f nats.yaml --namespace=nats >kubernetes/20-nats/helm-template.yml
-# HACK: inject `account` public key id into the leafnodes remote config using sed
-# (until  https://github.com/nats-io/k8s/pull/286 has been released,
-# and we can put it into nats.yaml directly).
-sed -i '' \
-    's!^\( *\)\(url: tls://connect.ngs.global:7422\)$!\1account: AB7AGANA6KWTTBUD3AUIEZ47M3GWP2L5AMEVV6OE4IDIN3VFOD3P6TZ5\n\1\2!' \
-    kubernetes/20-nats/helm-template.yml
+helm template nats nats/nats -f nats.yaml --namespace=nats --skip-tests >kubernetes/20-nats/helm-template.yml
 
 kubectl apply -k kubernetes/20-nats
 wait_for_pods -n nats -l app.kubernetes.io/name=nats
