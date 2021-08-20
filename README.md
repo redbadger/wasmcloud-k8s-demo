@@ -21,6 +21,9 @@ We are using pulumi for our infrastructure-as-code setup. If you get lost, it mi
 To set things up:
 
 - Ask for the .env from someone on the red-badger slack. Specifically, you will want to export PULUMI_CONFIG_PASSPHRASE into your environment (this is used to decrypt the pulumi state, which is shared in a google storage bucket).
+- Ask for User credentials for NGS and the internal nats cluster. These live at `kubernetes/20-nats/nats-secrets.yml` and
+  `kubernetes/50-todo-backend/base/nats-sidecar-secret.yml`.
+  - If you want to reproduce this demo on your own, you can create a new ngs account to put in nats-secrets.yml, and make a new Operator + Account + User on your computer. You will need to regenerate `kubernetes/20-nats/operator-jwt.yml` and `kubernetes/20-nats/nats-accounts.yml`
 
 #### Log into aws if you aren't already
 
@@ -82,10 +85,22 @@ This should return the empty array `[]`, or whatever todo items people have adde
 
 ## Debugging nats
 
+In order to connect directly to the nats cluster from your local machine, you will need to trust the cluster's CA certificate.
+
+You will also need to forward ports in such a way that the nats cluster is available on the domain name `nats.nats`. You can either edit /etc/hosts manually, or use kubefwd to achieve this.
+
 ```bash
 kubectl get secrets -n todo bogus-cert -o json | jq '.data["ca.crt"]' -r | base64 -D > ca.crt
 sudo kubefwd svc -n nats nats
 nats --tlsca=ca.crt --server=nats.nats --creds ~/.nkeys/creds/synadia/leaftest/wasmcloud-project.creds pub asdf adsf
+```
+
+Alternatively, if you are happy connecting to a sidecar, you can do what setup.sh does
+
+```bash
+pod=$(kubectl get pods -n todo --selector="tier=web" -o name)
+kubectl port-forward -n todo $pod 4222:4222
+nats pub asdf adsf
 ```
 
 ## Developing
