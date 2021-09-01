@@ -6,7 +6,7 @@ metadata:
 spec:
   workload:
     definition:
-      apiVersion: v1
+      apiVersion: wasmcloud.com/v1
       kind: Actor
   schematic:
     cue:
@@ -16,7 +16,7 @@ spec:
             image: string
         }
         output: {
-            apiVersion: "v1"
+            apiVersion: "wasmcloud.com/v1"
             kind:       "Actor"
             spec: {
               name: parameter.name
@@ -32,8 +32,8 @@ metadata:
 spec:
   workload:
     definition:
-      apiVersion: apps/v1
-      kind: Deployment
+      apiVersion: wasmcloud.com/v1
+      kind: Capability
   schematic:
     cue:
       template: |
@@ -42,9 +42,11 @@ spec:
             image: string
         }
         output: {
-            apiVersion: "apps/v1"
-            kind:       "Deployment"
+            apiVersion: "wasmcloud.com/v1"
+            kind:       "Capability"
             spec: {
+              name: parameter.name
+              image: parameter.image
             }
         }
 ---
