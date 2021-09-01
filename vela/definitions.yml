@@ -1,0 +1,75 @@
+---
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  name: actor
+spec:
+  workload:
+    definition:
+      apiVersion: v1
+      kind: Actor
+  schematic:
+    cue:
+      template: |
+        parameter: {
+            name:  string
+            image: string
+        }
+        output: {
+            apiVersion: "v1"
+            kind:       "Actor"
+            spec: {
+              name: parameter.name
+              image: parameter.image
+            }
+        }
+
+---
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  name: capability
+spec:
+  workload:
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+  schematic:
+    cue:
+      template: |
+        parameter: {
+            name:  string
+            image: string
+        }
+        output: {
+            apiVersion: "apps/v1"
+            kind:       "Deployment"
+            spec: {
+            }
+        }
+---
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: spreadscaler
+spec:
+  podDisruptive: false
+  schematic:
+    cue:
+      template: |
+        parameter: {
+            replicas: int
+        }
+---
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: linkdef
+spec:
+  podDisruptive: false
+  schematic:
+    cue:
+      template: |
+        parameter: {
+            target: string
+        }
