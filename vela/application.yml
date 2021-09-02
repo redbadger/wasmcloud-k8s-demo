@@ -53,3 +53,21 @@ spec:
               - name: haslights
                 requirements:
                   ledenabled: true
+# ---
+# apiVersion: core.oam.dev/v1beta1
+# kind: Application
+# metadata:
+#   name: website
+# spec:
+#   components:
+#     - name: frontend
+#       type: webservice
+#       properties:
+#         image: nginx
+#     - name: backend
+#       type: worker
+#       properties:
+#         image: busybox
+#         cmd:
+#           - sleep
+#           - "1000"
