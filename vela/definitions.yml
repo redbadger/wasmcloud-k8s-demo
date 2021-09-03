@@ -75,3 +75,29 @@ spec:
         parameter: {
             target: string
         }
+---
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  name: read-application
+spec:
+  schematic:
+    cue:
+      template: |
+        import (
+        	"vela/op"
+          "encoding/json"
+        )
+        application: op.#Read & {
+        	value: {
+        		apiVersion: "core.oam.dev/v1beta1"
+        		kind:       "Application"
+        		metadata: {
+        			name:      context.name
+        		}
+        	}
+        }
+        notify: op.#HTTPPost & {
+           url: "http://host.docker.internal:8081"
+           request: body: json.Marshal(application.value)
+        }
