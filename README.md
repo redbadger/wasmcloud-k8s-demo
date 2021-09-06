@@ -42,7 +42,7 @@ Check that you don't have a `GOOGLE_CREDENTIALS` environment variable exported f
 
 #### Run pulumi
 
-`pulumi login --cloud-url gs://pulumi-state-bucket`
+`pulumi login --cloud-url gs://wasmcloud-k8s-demo-state`
 
 `pulumi up` contains a confirmation step, so you don't need to worry about accidentally stomping over other people's work.
 
@@ -59,8 +59,16 @@ kubectl edit configmap aws-auth -n kube-system
 ```
 mapUsers: |
     - userarn: arn:aws:iam::394465323128:user/david.laban
-    username: david.laban
-    groups:
+      username: david.laban
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::394465323128:user/stuart.harris
+      username: stuart.harris
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::394465323128:user/aayush.attri
+      username: aayush.attri
+      groups:
         - system:masters
 ```
 

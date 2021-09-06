@@ -6,10 +6,10 @@ metadata:
   name: nats-config
   namespace: "nats"
   labels:
-    helm.sh/chart: nats-0.8.4
+    helm.sh/chart: nats-0.8.8
     app.kubernetes.io/name: nats
     app.kubernetes.io/instance: nats
-    app.kubernetes.io/version: "2.3.2"
+    app.kubernetes.io/version: "2.3.4"
     app.kubernetes.io/managed-by: Helm
 data:
   nats.conf: |
@@ -31,11 +31,9 @@ data:
     leafnodes {
       listen: "0.0.0.0:7422"
 
-      
-
       remotes: [
       {
-        url: tls://connect.ngs.global:7422
+        url: "tls://connect.ngs.global:7422"
         credentials: "/etc/nats-creds/user-credentials/user.ncreds"
       }
       ]
@@ -48,10 +46,10 @@ metadata:
   name: nats
   namespace: "nats"
   labels:
-    helm.sh/chart: nats-0.8.4
+    helm.sh/chart: nats-0.8.8
     app.kubernetes.io/name: nats
     app.kubernetes.io/instance: nats
-    app.kubernetes.io/version: "2.3.2"
+    app.kubernetes.io/version: "2.3.4"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -79,10 +77,10 @@ metadata:
   name: nats
   namespace: "nats"
   labels:
-    helm.sh/chart: nats-0.8.4
+    helm.sh/chart: nats-0.8.8
     app.kubernetes.io/name: nats
     app.kubernetes.io/instance: nats
-    app.kubernetes.io/version: "2.3.2"
+    app.kubernetes.io/version: "2.3.4"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -137,7 +135,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: nats
-        image: nats:2.3.2-alpine
+        image: nats:2.3.4-alpine
         imagePullPolicy: IfNotPresent
         resources:
           {}
@@ -154,6 +152,7 @@ spec:
           name: monitor
         - containerPort: 7777
           name: metrics
+
         command:
          - "nats-server"
          - "--config"
@@ -220,7 +219,7 @@ spec:
       #################################
       
       - name: reloader
-        image: natsio/nats-server-config-reloader:0.6.1
+        image: natsio/nats-server-config-reloader:0.6.2
         imagePullPolicy: IfNotPresent
         resources:
           null
