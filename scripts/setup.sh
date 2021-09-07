@@ -56,7 +56,7 @@ wait_for_deployments
 
 # Port forward to the nats cluster
 # TODO: work out how to make `concurrently` set a successful exit code.
-pnpx -y concurrently --kill-others "kubectl port-forward -n nats service/nats 4222:4222" "todo-backend/links.sh" || true
+pnpx -y concurrently --kill-others "kubectl port-forward -n nats service/nats 4222:4222" "scripts/deploy.mjs" || true
 
 while true; do
 	if [ "$CLUSTER" == "aws" ]; then
