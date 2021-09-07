@@ -15,8 +15,23 @@ const applyLinks = async () => {
   await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_KEY_VALUE} wasmcloud:keyvalue URL=redis://redis-service.todo:6379/`;
 };
 
+const waitForNats = async () => {
+  while ((await $`nats pub devnull somenoise`.exitCode) != 0) {
+    console.log(
+      "Could not connect to nats cluster. Please run the following in another terminal:"
+    );
+    console.log(
+      "kubectl port-forward -n nats-cluster nats-cluster-1 4222:4222"
+    );
+
+    await sleep(10_000);
+  }
+};
+
 void (async function () {
   try {
+    await waitForNats();
+    
     let { hosts } = JSON.parse(await $`wash ctl get hosts -o json`);
 
     for (let host of hosts) {
