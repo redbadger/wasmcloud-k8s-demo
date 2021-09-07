@@ -1,0 +1,53 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigning
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: nats-ca
+  namespace: cert-manager
+spec:
+  secretName: nats-ca
+  duration: 8736h # 1 year
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: selfsigning
+    kind: ClusterIssuer
+  commonName: nats-ca
+  usages:
+    - cert sign
+  organization:
+    - Red Badger
+  isCA: true
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: another-ca
+  namespace: cert-manager
+spec:
+  secretName: another-ca
+  duration: 8736h # 1 year
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: selfsigning
+    kind: ClusterIssuer
+  commonName: another-ca
+  usages:
+    - cert sign
+  organization:
+    - Red Badger
+  isCA: true
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: nats-ca
+  namespace: cert-manager
+spec:
+  ca:
+    secretName: nats-ca

@@ -1,1 +1,3 @@
-kubernetes/20-nats/nats-secret.yml
+kubernetes/20-nats/nats-secrets.yml
+kubernetes/50-todo-backend/base/nats-sidecar-secret.yml
+ca.crt

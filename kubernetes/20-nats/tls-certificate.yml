@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: nats-server-tls
+  namespace: nats
+spec:
+  secretName: nats-server-tls
+  duration: 2160h # 90 days
+  renewBefore: 240h # 10 days
+  issuerRef:
+    name: nats-ca
+    kind: ClusterIssuer
+  usages:
+    - signing
+    - key encipherment
+    - server auth
+  organization:
+    - Red Badger
+  commonName: nats.nats.svc.cluster.local
+  dnsNames:
+    - nats.nats
+    - nats.nats
+    - nats.nats.svc
+    - nats.nats.svc.cluster.local
+    - "*.nats"
+    - "*.nats.nats"
+    - "*.nats.nats.svc"

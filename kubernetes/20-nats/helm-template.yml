@@ -6,10 +6,10 @@ metadata:
   name: nats-config
   namespace: "nats"
   labels:
-    helm.sh/chart: nats-0.8.4
+    helm.sh/chart: nats-0.8.6
     app.kubernetes.io/name: nats
     app.kubernetes.io/instance: nats
-    app.kubernetes.io/version: "2.3.2"
+    app.kubernetes.io/version: "2.3.4"
     app.kubernetes.io/managed-by: Helm
 data:
   nats.conf: |
@@ -23,6 +23,16 @@ data:
     ###############
     http: 8222
     server_name: $POD_NAME
+    #####################
+    #                   #
+    # TLS Configuration #
+    #                   #
+    #####################
+    tls {
+        cert_file: /etc/nats-certs/clients/nats-server-tls/tls.crt
+        key_file:  /etc/nats-certs/clients/nats-server-tls/tls.key
+        ca_file: /etc/nats-certs/clients/nats-server-tls/ca.crt
+    }
     #################
     #               #
     # NATS Leafnode #
@@ -35,11 +45,20 @@ data:
 
       remotes: [
       {
-        url: tls://connect.ngs.global:7422
+        url: "tls://connect.ngs.global:7422"
+        account: "AB7AGANA6KWTTBUD3AUIEZ47M3GWP2L5AMEVV6OE4IDIN3VFOD3P6TZ5"
         credentials: "/etc/nats-creds/user-credentials/user.ncreds"
       }
       ]
     }
+    
+    ##################
+    #                #
+    # Authorization  #
+    #                #
+    ##################
+    resolver: MEMORY
+    include "accounts/resolver.conf"
 ---
 # Source: nats/templates/service.yaml
 apiVersion: v1
@@ -48,10 +67,10 @@ metadata:
   name: nats
   namespace: "nats"
   labels:
-    helm.sh/chart: nats-0.8.4
+    helm.sh/chart: nats-0.8.6
     app.kubernetes.io/name: nats
     app.kubernetes.io/instance: nats
-    app.kubernetes.io/version: "2.3.2"
+    app.kubernetes.io/version: "2.3.4"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -79,10 +98,10 @@ metadata:
   name: nats
   namespace: "nats"
   labels:
-    helm.sh/chart: nats-0.8.4
+    helm.sh/chart: nats-0.8.6
     app.kubernetes.io/name: nats
     app.kubernetes.io/instance: nats
-    app.kubernetes.io/version: "2.3.2"
+    app.kubernetes.io/version: "2.3.4"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -110,12 +129,19 @@ spec:
       # Local volume shared with the reloader.
       - name: pid
         emptyDir: {}
+      - name: resolver-volume
+        configMap:
+          name: nats-accounts
 
       #################
       #               #
       #  TLS Volumes  #
       #               #
       #################
+      
+      - name: nats-server-tls-clients-volume
+        secret:
+          secretName: nats-server-tls
       #
       # Leafnode credential volumes
       #
@@ -137,7 +163,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: nats
-        image: nats:2.3.2-alpine
+        image: nats:2.3.4-alpine
         imagePullPolicy: IfNotPresent
         resources:
           {}
@@ -178,6 +204,16 @@ spec:
             mountPath: /etc/nats-config
           - name: pid
             mountPath: /var/run/nats
+          - name: resolver-volume
+            mountPath: /etc/nats-config/accounts
+          #######################
+          #                     #
+          #  TLS Volumes Mounts #
+          #                     #
+          #######################
+          
+          - name: nats-server-tls-clients-volume
+            mountPath: /etc/nats-certs/clients/nats-server-tls
           #
           # Leafnode credential volumes
           #
