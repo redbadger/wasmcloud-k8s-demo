@@ -1,4 +1,0 @@
-labels:
-  sample: "wasmcloud todo-backend actor"
-actors:
-  - "eu.gcr.io/wasmcloud-k8s-demo/todo-backend:0.2"
