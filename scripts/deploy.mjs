@@ -11,8 +11,8 @@ const applyLinks = async () => {
   const PROVIDER_KEY_VALUE =
     "VARKLFUT2KURNFQ36TPNLYSYDKSAI73FC6NYIQJVHCQ4ANJOS56BHMZ2";
 
-  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_HTTP} wasmcloud:httpserver PORT=8082`;
-  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_KEY_VALUE} wasmcloud:keyvalue URL=redis://redis-service.todo:6379/`;
+  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_HTTP} wasmcloud:httpserver PORT=8082 --timeout 10`;
+  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_KEY_VALUE} wasmcloud:keyvalue URL=redis://redis-service.todo:6379/ --timeout 10`;
 };
 
 const waitForNats = async () => {
@@ -42,7 +42,7 @@ void (async function () {
       if (actors.length === 0 && labels.intention === "actor") {
         await start(
           "actor",
-          "wasmcloudk8sdemo.azurecr.io/wasmcloud-k8s-demo/todo:0.1.0-beta",
+          "wasmcloudk8sdemo.azurecr.io/wasmcloud-k8s-demo/todo:0.1.2",
           host.id
         );
       }
