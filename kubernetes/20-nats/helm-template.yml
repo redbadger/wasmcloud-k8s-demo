@@ -23,6 +23,14 @@ data:
     ###############
     http: 8222
     server_name: $POD_NAME
+    ###################################
+    #                                 #
+    # NATS JetStream                  #
+    #                                 #
+    ###################################
+    jetstream {
+      max_mem: 2Gi
+    }
     #################
     #               #
     # NATS Leafnode #
@@ -135,7 +143,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: nats
-        image: nats:2.3.4-alpine
+        image: nats:alpine
         imagePullPolicy: IfNotPresent
         resources:
           {}
@@ -254,6 +262,7 @@ spec:
         - -varz
         - -prefix=nats
         - -use_internal_server_id
+        - -jsz=all
         - http://localhost:8222/
         ports:
         - containerPort: 7777

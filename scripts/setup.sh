@@ -19,10 +19,12 @@ CLUSTER="${1:-x}"
 
 if [ "$CLUSTER" == "aws" ]; then
 	aws eks --region eu-west-2 update-kubeconfig --name wasmcloud
+	kubectx aws=.
 	# apply nginx controller
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/aws/deploy.yaml
 elif [ "$CLUSTER" == "gcp" ]; then
 	gcloud container clusters get-credentials wasmcloud --zone europe-west2
+	kubectx gcp=.
 	# apply nginx controller
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/cloud/deploy.yaml
 else
