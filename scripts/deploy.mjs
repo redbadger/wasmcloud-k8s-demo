@@ -11,27 +11,42 @@ const applyLinks = async () => {
   const PROVIDER_KEY_VALUE =
     "VARKLFUT2KURNFQ36TPNLYSYDKSAI73FC6NYIQJVHCQ4ANJOS56BHMZ2";
 
-  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_HTTP} wasmcloud:httpserver PORT=8082 --timeout 10`;
-  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_KEY_VALUE} wasmcloud:keyvalue URL=redis://redis-service.todo:6379/ --timeout 10`;
+  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_HTTP} wasmcloud:httpserver PORT=8082 --timeout 10 -o json`;
+  await $`wash ctl link put ${ACTOR_KEY} ${PROVIDER_KEY_VALUE} wasmcloud:keyvalue URL=redis://redis-service.todo:6379/ --timeout 10 -o json`;
 };
 
-const waitForNats = async () => {
+const forwardAndWaitForNats = async () => {
+  let forwardingDead = false;
+  let forwarding = $`kubectl port-forward -n nats nats-0 4222:4222`;
+  forwarding.then((output) => {
+    forwardingDead = true;
+    return output;
+  });
+
   while ((await $`nats pub devnull somenoise`.exitCode) != 0) {
     console.log(
       "Could not connect to nats cluster. Please run the following in another terminal:"
     );
-    console.log(
-      "kubectl port-forward -n nats-cluster nats-cluster-1 4222:4222"
-    );
+    console.log("kubectl port-forward -n nats nats-0 4222:4222");
 
-    await sleep(10_000);
+    if (forwardingDead) {
+      throw new Error(
+        "kubectl port-forward -n nats nats-0 4222:4222 died. Do you have it running elsewhere?"
+      );
+    }
+
+    await sleep(1_000);
   }
+  // forwarding is thenable, so returning from
+  return { forwarding };
 };
 
 void (async function () {
+  let { forwarding } = await forwardAndWaitForNats();
+  console.log("returned from forwardAndWaitForNats");
+
   try {
-    await waitForNats();
-    
+    console.log("getting list of hosts");
     let { hosts } = JSON.parse(await $`wash ctl get hosts -o json`);
 
     for (let host of hosts) {
@@ -67,5 +82,8 @@ void (async function () {
     await applyLinks();
   } catch (error) {
     console.log(error);
+  } finally {
+    await forwarding.kill("SIGTERM");
+    await forwarding.exitCode;
   }
 })();
