@@ -41,49 +41,49 @@ const forwardAndWaitForNats = async () => {
   return { forwarding };
 };
 
-void (async function () {
-  let { forwarding } = await forwardAndWaitForNats();
-  console.log("returned from forwardAndWaitForNats");
+const deployActors = async () => {
+  let { hosts } = JSON.parse(await $`wash ctl get hosts -o json --timeout 10`);
+  for (let host of hosts) {
+    const {
+      inventory: { actors, providers, labels },
+    } = JSON.parse(await $`wash ctl get inventory ${host.id} -o json --timeout 30`);
 
-  try {
-    console.log("getting list of hosts");
-    let { hosts } = JSON.parse(await $`wash ctl get hosts -o json`);
-
-    for (let host of hosts) {
-      const {
-        inventory: { actors, providers, labels },
-      } = JSON.parse(await $`wash ctl get inventory ${host.id} -o json`);
-
-      if (actors.length === 0 && labels.intention === "actor") {
-        await start(
-          "actor",
-          "wasmcloudk8sdemo.azurecr.io/wasmcloud-k8s-demo/todo:0.1.2",
-          host.id
-        );
-      }
-
-      if (providers.length === 0 && labels.intention === "http") {
-        await start(
-          "provider",
-          "wasmcloud.azurecr.io/httpserver:0.13.1",
-          host.id
-        );
-      }
-
-      if (providers.length === 0 && labels.intention === "redis") {
-        await start(
-          "provider",
-          "wasmcloudk8sdemo.azurecr.io/wasmcloud-k8s-demo/kvredis:0.14.0-beta",
-          host.id
-        );
-      }
+    if (actors.length === 0 && labels.intention === "actor") {
+      await start(
+        "actor",
+        "wasmcloudk8sdemo.azurecr.io/wasmcloud-k8s-demo/todo:0.1.2",
+        host.id
+      );
     }
 
-    await applyLinks();
+    if (providers.length === 0 && labels.intention === "http") {
+      await start(
+        "provider",
+        "wasmcloud.azurecr.io/httpserver:0.13.1",
+        host.id
+      );
+    }
+
+    if (providers.length === 0 && labels.intention === "redis") {
+      await start(
+        "provider",
+        "wasmcloudk8sdemo.azurecr.io/wasmcloud-k8s-demo/kvredis:0.14.0-beta",
+        host.id
+      );
+    }
+  }
+  await applyLinks();
+};
+
+void (async function () {
+  let { forwarding } = await forwardAndWaitForNats();
+  try {
+    while (true) {
+      await deployActors();
+    }
   } catch (error) {
     console.log(error);
   } finally {
-    await forwarding.kill("SIGTERM");
-    await forwarding.exitCode;
+    forwarding.kill("SIGINT");
   }
 })();
