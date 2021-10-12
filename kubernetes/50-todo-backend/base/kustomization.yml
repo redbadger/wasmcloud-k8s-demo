@@ -3,9 +3,9 @@ kind: Kustomization
 
 resources:
   - namespace.yml
+  - oci-secret.yml
   - actor.yml
   - http.yml
-  - logging.yml
   - ingress.yml
 
 namespace: todo

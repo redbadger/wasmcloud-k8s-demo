@@ -10,8 +10,7 @@ This repo contains our investigation into the developer experience of using wasm
 - chaos testing
 - ...
 
-We have chosen to go with krustlet + wasmcloud 0.18, because it is more aligned with the GitOps philosophy of idempotently applying desired configurations. We are expecting wasmcloud 0.20 to be released towards the end of our project, but krustlet compatibility is expected to lag behind.
-
+This project is running the todo example that can be found [here](https://github.com/wasmCloud/examples/pull/65).
 ## Setup
 
 ### Infrastructure
@@ -42,7 +41,7 @@ Check that you don't have a `GOOGLE_CREDENTIALS` environment variable exported f
 
 #### Run pulumi
 
-`pulumi login --cloud-url gs://pulumi-state-bucket`
+`pulumi login --cloud-url gs://wasmcloud-k8s-demo-state`
 
 `pulumi up` contains a confirmation step, so you don't need to worry about accidentally stomping over other people's work.
 
@@ -59,8 +58,16 @@ kubectl edit configmap aws-auth -n kube-system
 ```
 mapUsers: |
     - userarn: arn:aws:iam::394465323128:user/david.laban
-    username: david.laban
-    groups:
+      username: david.laban
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::394465323128:user/stuart.harris
+      username: stuart.harris
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::394465323128:user/aayush.attri
+      username: aayush.attri
+      groups:
         - system:masters
 ```
 
@@ -105,3 +112,4 @@ index 5c99816..ffaa489 100644
 and push a new image like this `wasm-to-oci push todo-backend/target/wasm32-unknown-unknown/debug/todo_backend_s.wasm eu.gcr.io/wasmcloud-k8s-demo/todo-backend:0.2`
 
 We made our registry public, to simplify our lives.
+

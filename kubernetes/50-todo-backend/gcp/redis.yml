@@ -1,20 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: http-capability
+  name: redis-capability
   namespace: todo
   labels:
-    app: http-capability
+    app: redis-capability
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: http-capability
+      app: redis-capability
   template:
     metadata:
       labels:
-        app: http-capability
-        tier: web
+        app: redis-capability
     spec:
       containers:
         - name: wasmcloud
@@ -22,7 +21,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: HOST_INTENTION
-              value: http
+              value: redis
             - name: WASMCLOUD_PROV_RPC_HOST
               value: nats.nats
             - name: WASMCLOUD_CTL_HOST
@@ -40,21 +39,3 @@ spec:
                 secretKeyRef:
                   name: oci-credentials
                   key: password
-          ports:
-            - containerPort: 8082
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: http-capability-service
-  namespace: todo
-  annotations:
-    cloud.google.com/neg: '{"ingress": true}'
-spec:
-  selector:
-    app: http-capability
-  ports:
-    - protocol: TCP
-      name: http
-      port: 8082
-      targetPort: 8082

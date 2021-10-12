@@ -8,3 +8,12 @@ leafnodes:
           key: user.ncreds
 natsbox:
   enabled: false
+nats:
+  image: nats:alpine
+
+  jetstream:
+    enabled: true
+
+    memStorage:
+      enabled: true
+      size: 2Gi
